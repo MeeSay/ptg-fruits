@@ -1,11 +1,10 @@
 "use client";
 import React, { useState } from "react";
-import FruitDropdown, { Fruit } from "../_component/FruitDropdown";
 import { useRouter } from "next/navigation";
 import ChooseFruit from "../_component/ChooseFruit";
 
 export default function CaculatorPage() {
-  const [fruit, setFruit] = useState<Fruit>({
+  const [fruit, setFruit] = useState({
     name: "",
     price: 0,
   });
