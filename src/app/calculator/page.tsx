@@ -6,15 +6,16 @@ import ChooseFruit from "../_component/ChooseFruit";
 export default function CaculatorPage() {
   const [fruit, setFruit] = useState({
     name: "",
-    price: 0,
+    icon: "",
   });
   const [fruitWeight, setFruitWeight] = useState<number>(0);
   const [fruitValue, setFruitValue] = useState<number>(0);
+  const [variants, setVariants] = useState<string[]>([]);
   const [close, setClose] = useState<boolean>(false);
   const router = useRouter();
 
   const handleCaculator = () => {
-    const totalPrice = fruit.price * fruitWeight;
+    const totalPrice = fruitWeight;
     setFruitValue(totalPrice);
   };
   return (
@@ -48,10 +49,17 @@ export default function CaculatorPage() {
             <ChooseFruit
               onClose={() => setClose(false)}
               onSubmit={(data) => {
-                console.log(data);
+                setFruit({ name: data.fruit.name, icon: data.fruit.icon });
+                setVariants(data.variants);
                 setClose(false);
               }}
             />
+          )}
+          {fruit.name && (
+            <div className="text-2xl text-white font-semibold">
+              Nông sản đã chọn: {fruit.icon} {fruit.name}{" "}
+              {variants.length > 0 && `- Biến thể: ${variants.join(", ")}`}
+            </div>
           )}
           <div className="flex gap-2 items-center justify-center">
             <p className="text-black text-lg">Nhập cân nặng</p>

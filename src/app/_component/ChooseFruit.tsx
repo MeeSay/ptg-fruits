@@ -53,15 +53,20 @@ const fruits = [
   { name: "Hoa hướng dương rắng", count: 0, icon: "🌻", disabled: true },
 ];
 
+export interface Fruit {
+  name: string;
+  icon: string;
+}
+
 interface ChooseFruitProps {
   onClose: () => void;
-  onSubmit: (data: { fruit: string | null; variants: string[] }) => void;
+  onSubmit: (data: { fruit: Fruit; variants: string[] }) => void;
 }
 
 export default function ChooseFruit({ onClose, onSubmit }: ChooseFruitProps) {
   const [activeTab, setActiveTab] = useState<"variant" | "fruit">("variant");
   const [selectedVariants, setSelectedVariants] = useState<string[]>([]);
-  const [selectedFruit, setSelectedFruit] = useState<string | null>(null);
+  const [selectedFruit, setSelectedFruit] = useState<Fruit | null>(null);
 
   const toggleVariant = (label: string) => {
     setSelectedVariants((prev) => {
@@ -77,8 +82,10 @@ export default function ChooseFruit({ onClose, onSubmit }: ChooseFruitProps) {
     });
   };
 
-  const toggleFruit = (name: string) => {
-    setSelectedFruit((prev) => (prev === name ? null : name));
+  const toggleFruit = (name: string, icon: string) => {
+    setSelectedFruit((prev) =>
+      prev && prev.name === name ? null : { name, icon }
+    );
   };
 
   const clearAll = () => {
@@ -87,6 +94,10 @@ export default function ChooseFruit({ onClose, onSubmit }: ChooseFruitProps) {
   };
 
   const handleSubmit = () => {
+    if (!selectedFruit) {
+      alert("Vui lòng chọn ít nhất một nông sản.");
+      return;
+    }
     onSubmit({
       fruit: selectedFruit,
       variants: selectedVariants,
@@ -95,7 +106,7 @@ export default function ChooseFruit({ onClose, onSubmit }: ChooseFruitProps) {
 
   return (
     <div className="fixed inset-0 flex items-center justify-center bg-black/50 z-50">
-      <div className="bg-[#E5D3B3] rounded-3xl shadow-lg w-[1000px] max-w-full p-8 relative">
+      <div className="bg-[#E5D3B3] rounded-3xl shadow-lg w-250 max-w-full p-8 relative">
         {/* Close button */}
         <button
           onClick={onClose}
@@ -112,16 +123,6 @@ export default function ChooseFruit({ onClose, onSubmit }: ChooseFruitProps) {
         {/* Tabs */}
         <div className="flex border-b-2 border-[#BCA18A] mb-6">
           <button
-            onClick={() => setActiveTab("variant")}
-            className={`px-6 py-3 font-bold text-lg ${
-              activeTab === "variant"
-                ? "text-[#7C5C3E] border-b-4 border-[#8B6F47]"
-                : "text-[#9B8070]"
-            }`}
-          >
-            Biến thể
-          </button>
-          <button
             onClick={() => setActiveTab("fruit")}
             className={`px-6 py-3 font-bold text-lg ${
               activeTab === "fruit"
@@ -130,6 +131,16 @@ export default function ChooseFruit({ onClose, onSubmit }: ChooseFruitProps) {
             }`}
           >
             Nông sản
+          </button>
+          <button
+            onClick={() => setActiveTab("variant")}
+            className={`px-6 py-3 font-bold text-lg ${
+              activeTab === "variant"
+                ? "text-[#7C5C3E] border-b-4 border-[#8B6F47]"
+                : "text-[#9B8070]"
+            }`}
+          >
+            Biến thể
           </button>
         </div>
 
@@ -165,7 +176,9 @@ export default function ChooseFruit({ onClose, onSubmit }: ChooseFruitProps) {
                 className={`flex items-center justify-between gap-2 px-3 py-2 rounded-2xl bg-white shadow cursor-pointer transition ${
                   fruit.disabled ? "opacity-50 cursor-not-allowed" : ""
                 } ${
-                  selectedFruit === fruit.name ? "ring-2 ring-[#8B6F47]" : ""
+                  selectedFruit?.name === fruit.name
+                    ? "ring-2 ring-[#8B6F47]"
+                    : ""
                 }`}
               >
                 <div className="flex items-center gap-2">
@@ -178,8 +191,10 @@ export default function ChooseFruit({ onClose, onSubmit }: ChooseFruitProps) {
                   <span className="text-sm text-[#9B8070]">{fruit.count}</span>
                   <input
                     type="checkbox"
-                    checked={selectedFruit === fruit.name}
-                    onChange={() => !fruit.disabled && toggleFruit(fruit.name)}
+                    checked={selectedFruit?.name === fruit.name}
+                    onChange={() =>
+                      !fruit.disabled && toggleFruit(fruit.name, fruit.icon)
+                    }
                     disabled={fruit.disabled}
                     className="accent-[#BCA18A] w-4 h-4"
                   />
