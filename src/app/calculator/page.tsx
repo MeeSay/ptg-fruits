@@ -1,9 +1,28 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import ChooseFruit from "../_component/ChooseFruit";
+import { getFruits, getVariants } from "./action";
+
+interface Fruit {
+  id: string;
+  name: string;
+  average: number;
+  imgs: string;
+}
+
+interface Variant {
+  id: string;
+  name: string;
+  text_color: string;
+  background_color: string;
+  value: number;
+}
 
 export default function CaculatorPage() {
+  const [dataFruit, setDataFruit] = useState<Fruit[]>();
+  const [dataVariants, setDataVariants] = useState<Variant[]>();
+
   const [fruit, setFruit] = useState({
     name: "",
     icon: "",
@@ -18,6 +37,39 @@ export default function CaculatorPage() {
     const totalPrice = fruitWeight;
     setFruitValue(totalPrice);
   };
+
+  useEffect(() => {
+    const fetchFruit = async () => {
+      try {
+        const result = await getFruits();
+        if (result) {
+          console.log("result", result);
+          setDataFruit(result);
+        }
+      } catch (error) {
+        console.error("Error fetching fruits:", error);
+      }
+    };
+
+    fetchFruit();
+  }, []);
+
+  useEffect(() => {
+    const fetchVariant = async () => {
+      try {
+        const result = await getVariants();
+        if (result) {
+          console.log("result", result);
+          setDataVariants(result);
+        }
+      } catch (error) {
+        console.error("Error fetching fruits:", error);
+      }
+    };
+
+    fetchVariant();
+  }, []);
+
   return (
     <main className="relative min-h-screen flex items-center justify-center bg-green-100 px-6 py-4">
       <div className="absolute top-4 right-6 flex gap-2">
@@ -33,6 +85,9 @@ export default function CaculatorPage() {
         >
           Đăng ký
         </button>
+      </div>
+      <div className="absolute top-4 flex gap-2 text-center text-green-700 font-bold">
+        PTG Fruits
       </div>
       <div className="flex flex-col items-center justify-center max-w-2xl w-full h-full text-center">
         <h1 className="text-4xl font-bold text-green-700 mb-4">

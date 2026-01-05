@@ -64,7 +64,7 @@ interface ChooseFruitProps {
 }
 
 export default function ChooseFruit({ onClose, onSubmit }: ChooseFruitProps) {
-  const [activeTab, setActiveTab] = useState<"variant" | "fruit">("variant");
+  const [activeTab, setActiveTab] = useState<"variant" | "fruit">("fruit");
   const [selectedVariants, setSelectedVariants] = useState<string[]>([]);
   const [selectedFruit, setSelectedFruit] = useState<Fruit | null>(null);
 
