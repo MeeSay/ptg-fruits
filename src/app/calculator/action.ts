@@ -1,8 +1,6 @@
-"use server";
-
 const API_GATEWAY_URL = process.env.API_GATEWAY_URL || "http://localhost:3001";
 
-interface Variant {
+export interface Variant {
   id: string;
   name: string;
   text_color: string;
@@ -10,17 +8,23 @@ interface Variant {
   value: number;
 }
 
-interface Fruit {
+export interface Fruit {
   id: string;
   name: string;
   average: number;
   imgs: string;
 }
 
+interface ApiResponse<T> {
+  success: boolean;
+  message: string;
+  data: T[];
+}
+
 /**
  * Fetch all variants from API Gateway
  */
-export async function getVariants(): Promise<Variant[]> {
+export async function getVariants(): Promise<ApiResponse<Variant>> {
   try {
     const response = await fetch(`${API_GATEWAY_URL}/api/variants`, {
       method: "GET",
@@ -45,7 +49,7 @@ export async function getVariants(): Promise<Variant[]> {
 /**
  * Search variants by query
  */
-export async function searchVariants(query: string): Promise<Variant[]> {
+export async function searchVariants(query: string): Promise<Variant> {
   try {
     const response = await fetch(
       `${API_GATEWAY_URL}/api/variants/search?q=${encodeURIComponent(query)}`,
@@ -73,7 +77,7 @@ export async function searchVariants(query: string): Promise<Variant[]> {
 /**
  * Fetch all fruits from API Gateway
  */
-export async function getFruits(): Promise<Fruit[]> {
+export async function getFruits(): Promise<ApiResponse<Fruit>> {
   try {
     const response = await fetch(`${API_GATEWAY_URL}/api/fruits`, {
       method: "GET",
@@ -98,7 +102,7 @@ export async function getFruits(): Promise<Fruit[]> {
 /**
  * Search fruits by query
  */
-export async function searchFruits(query: string): Promise<Fruit[]> {
+export async function searchFruits(query: string): Promise<Fruit> {
   try {
     const response = await fetch(
       `${API_GATEWAY_URL}/api/fruits/search?q=${encodeURIComponent(query)}`,

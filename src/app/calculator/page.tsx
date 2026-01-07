@@ -25,7 +25,9 @@ export default function CaculatorPage() {
 
   const [fruit, setFruit] = useState({
     name: "",
-    icon: "",
+    id: "",
+    average: 0,
+    imgs: "",
   });
   const [fruitWeight, setFruitWeight] = useState<number>(0);
   const [fruitValue, setFruitValue] = useState<number>(0);
@@ -44,7 +46,7 @@ export default function CaculatorPage() {
         const result = await getFruits();
         if (result) {
           console.log("result", result);
-          setDataFruit(result);
+          setDataFruit(result.data);
         }
       } catch (error) {
         console.error("Error fetching fruits:", error);
@@ -60,7 +62,7 @@ export default function CaculatorPage() {
         const result = await getVariants();
         if (result) {
           console.log("result", result);
-          setDataVariants(result);
+          setDataVariants(result.data);
         }
       } catch (error) {
         console.error("Error fetching fruits:", error);
@@ -104,15 +106,23 @@ export default function CaculatorPage() {
             <ChooseFruit
               onClose={() => setClose(false)}
               onSubmit={(data) => {
-                setFruit({ name: data.fruit.name, icon: data.fruit.icon });
+                setFruit({
+                  id: data.fruit.id,
+                  name: data.fruit.name,
+                  average: data.fruit.average,
+                  imgs: data.fruit.imgs,
+                });
                 setVariants(data.variants);
                 setClose(false);
               }}
+              fruits={dataFruit || []}
+              variants={dataVariants || []}
             />
           )}
           {fruit.name && (
             <div className="text-2xl text-white font-semibold">
-              Nông sản đã chọn: {fruit.icon} {fruit.name}{" "}
+              {/* Nông sản đã chọn: {fruit.imgs} {fruit.name}{" "} */}
+              Nông sản đã chọn: {fruit.name}{" "}
               {variants.length > 0 && `- Biến thể: ${variants.join(", ")}`}
             </div>
           )}
