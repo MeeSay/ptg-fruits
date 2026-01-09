@@ -1,8 +1,12 @@
 "use client";
 import React, { useState } from "react";
+import Header from "../_component/SubHeader";
 
 export default function ExchangePage() {
   return (
-    <main className="flex min-h-screen flex-col items-center justify-center bg-green-50 p-8"></main>
+    <div className="h-screen flex flex-col">
+      <Header />
+      <main className="flex-1 flex items-center justify-center bg-white px-6 py-4 overflow-auto"></main>
+    </div>
   );
 }
