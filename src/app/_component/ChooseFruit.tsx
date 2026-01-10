@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { Fruit, Variant } from "../calculator/action";
+import Image from "next/image";
 interface ChooseFruitProps {
   onClose: () => void;
   onSubmit: (data: { fruit: Fruit; variants: string[] }) => void;
@@ -52,8 +53,14 @@ export default function ChooseFruit({
   };
 
   return (
-    <div className="fixed inset-0 flex items-center justify-center bg-black/50 z-50">
-      <div className="bg-[#E5D3B3] rounded-3xl shadow-lg w-250 max-w-full p-8 relative">
+    <div
+      className="fixed inset-0 flex items-center justify-center bg-black/50 z-50"
+      onClick={onClose}
+    >
+      <div
+        className="bg-[#E5D3B3] rounded-3xl shadow-lg w-250 max-w-full p-8 relative"
+        onClick={(e) => e.stopPropagation()}
+      >
         {/* Close button */}
         <button
           onClick={onClose}
@@ -64,7 +71,7 @@ export default function ChooseFruit({
 
         {/* Header */}
         <div className="text-center mb-4">
-          <h2 className="text-2xl font-bold text-[#7C5C3E]">Lọc nông sản</h2>
+          <h2 className="text-2xl font-bold text-[#7C5C3E]">Chọn nông sản</h2>
         </div>
 
         {/* Tabs */}
@@ -93,7 +100,7 @@ export default function ChooseFruit({
 
         {/* Content */}
         {activeTab === "variant" ? (
-          <div className="grid grid-cols-6 gap-3 mb-6">
+          <div className="grid grid-cols-6 gap-3 mb-6 max-h-96 overflow-y-auto scrollbar-custom">
             {variants.map((v) => (
               <label
                 key={v.name}
@@ -116,7 +123,7 @@ export default function ChooseFruit({
             ))}
           </div>
         ) : (
-          <div className="grid grid-cols-5 gap-3 mb-6">
+          <div className="grid grid-cols-5 gap-3 mb-6 max-h-96 px-4 overflow-y-auto scrollbar-custom">
             {fruits.map((fruit) => (
               <label
                 key={fruit.name}
@@ -125,19 +132,23 @@ export default function ChooseFruit({
                 }`}
               >
                 <div className="flex items-center gap-2">
-                  {/* <span className="text-lg">{fruit.imgs}</span> */}
-                  <span className="font-semibold text-sm text-[#7C5C3E]">
+                  <Image
+                    src={`/images/fruits_icon/${fruit.imgs}.png`}
+                    alt={fruit.name}
+                    width={24}
+                    height={24}
+                    className="w-6 h-6"
+                  />
+                  <span className="font-semibold text-start text-sm text-[#7C5C3E]">
                     {fruit.name}
                   </span>
                 </div>
-                <div className="flex items-center gap-2">
-                  <input
-                    type="checkbox"
-                    checked={selectedFruit?.id === fruit.id}
-                    onChange={() => toggleFruit(fruit)}
-                    className="accent-[#BCA18A] w-4 h-4"
-                  />
-                </div>
+                <input
+                  type="checkbox"
+                  checked={selectedFruit?.id === fruit.id}
+                  onChange={() => toggleFruit(fruit)}
+                  className="accent-[#BCA18A] w-4 h-4"
+                />
               </label>
             ))}
           </div>
