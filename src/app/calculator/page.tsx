@@ -3,6 +3,7 @@ import React, { useEffect, useState } from "react";
 import ChooseFruit from "../_component/ChooseFruit";
 import { getFruits, getVariants } from "./action";
 import Header from "../_component/SubHeader";
+import Image from "next/image";
 
 interface Fruit {
   id: string;
@@ -31,7 +32,7 @@ export default function CaculatorPage() {
   });
   const [fruitWeight, setFruitWeight] = useState<number>(0);
   const [fruitValue, setFruitValue] = useState<number>(0);
-  const [variants, setVariants] = useState<string[]>([]);
+  const [variants, setVariants] = useState<Variant[]>([]);
   const [close, setClose] = useState<boolean>(false);
 
   const handleCaculator = () => {
@@ -104,10 +105,31 @@ export default function CaculatorPage() {
               />
             )}
             {fruit.name && (
-              <div className="text-2xl text-white font-semibold">
-                {/* Nông sản đã chọn: {fruit.imgs} {fruit.name}{" "} */}
-                Nông sản đã chọn: {fruit.name}{" "}
-                {variants.length > 0 && `- Biến thể: ${variants.join(", ")}`}
+              <div className="text-2xl text-black font-semibold ">
+                <div className="flex items-center gap-2">
+                  Nông sản đã chọn:
+                  <Image
+                    src={`/images/fruits_icon/${fruit.imgs}.png`}
+                    alt={fruit.name}
+                    width={50}
+                    height={50}
+                  />
+                  {fruit.name}{" "}
+                </div>
+                {variants.length > 0 && (
+                  <div className="flex items-center gap-2 flex-wrap">
+                    <span>Biến thể:</span>
+                    {variants.map((variant, index) => (
+                      <span
+                        key={variant.id}
+                        style={{ color: variant.text_color }}
+                      >
+                        {variant.name}
+                        {index < variants.length - 1 && ","}
+                      </span>
+                    ))}
+                  </div>
+                )}
               </div>
             )}
             <div className="flex gap-2 items-center justify-center">
